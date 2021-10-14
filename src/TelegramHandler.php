@@ -40,6 +40,17 @@ class sisHandler extends AbstractProcessingHandler
      */
     private $appEnv;
 
+    public static $levels = [
+        0 => "EMERGENCY",
+        1 => "ALERT",
+        2 => "CRITICAL",
+        3 => "ERROR",
+        4 => "WARNING",
+        5 => "NOTICE",
+        6 => "INFORMATIONAL",
+        7 => "DEBUG",
+    ];
+
     /**
      * sisHandler constructor.
      * @param int $level
@@ -80,7 +91,7 @@ class sisHandler extends AbstractProcessingHandler
             // );
             $text                 = $this->formatText($record['formatted'], $record['level_name']);
             $dataSIS              = new \stdClass();
-            $dataSIS->level       = $record['level_name'];
+            $dataSIS->level = array_search($record['level_name'], self::$levels);
             $dataSIS->message     = $text;
             $dataSIS->description = rtrim(strtok($text, "\n"));
 
