@@ -7,10 +7,10 @@ use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 
 /**
- * Class sisHandler
+ * Class SisHandler
  * @package App\Logging
  */
-class sisHandler extends AbstractProcessingHandler
+class SisHandler extends AbstractProcessingHandler
 {
     /**
      * Bot API token
@@ -52,7 +52,7 @@ class sisHandler extends AbstractProcessingHandler
     ];
 
     /**
-     * sisHandler constructor.
+     * SisHandler constructor.
      * @param int $level
      */
     public function __construct($level)
