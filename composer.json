@@ -2,33 +2,26 @@
     "name": "michelmelo/laravel-sishandler",
     "description": "ServDebt Improvement System Handler for Monolog",
     "license": "MIT",
-    "autoload":
-    {
-        "psr-4":
-        {
+    "autoload": {
+        "psr-4": {
             "MichelMelo\\Logger\\": "src"
         }
     },
-    "authors": [
-    {
+    "authors": [{
         "name": "Michel Melo",
         "email": "eu@michelmelo.pt",
         "role": "author",
         "homepage": "https://michelmelo.pt"
     }],
-    "require":
-    {
+    "require": {
         "php": "^7.1.3|^8.0",
         "monolog/monolog": "^1.23|^2.0",
-         "irazasyed/telegram-bot-sdk": "3.4.1",
         "laravel/framework": "5.6.*|5.7.*|5.8.*|^6.0|^7.0|^8.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "extra":
-    {
-        "laravel":
-        {
+    "extra": {
+        "laravel": {
             "providers": [
                 "MichelMelo\\Logger\\SisLoggerServiceProvider"
             ]
