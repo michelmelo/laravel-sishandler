@@ -91,7 +91,7 @@ class sisHandler extends AbstractProcessingHandler
             // );
             $text                 = $this->formatText($record['formatted'], $record['level_name']);
             $dataSIS              = new \stdClass();
-            $dataSIS->level = array_search($record['level_name'], self::$levels);
+            $dataSIS->level       = array_search($record['level_name'], self::$levels);
             $dataSIS->message     = $text;
             $dataSIS->description = rtrim(strtok($text, "\n"));
 
