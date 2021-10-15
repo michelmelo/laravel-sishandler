@@ -40,17 +40,6 @@ class SisHandler extends AbstractProcessingHandler
      */
     private $appEnv;
 
-    public static $levels = [
-        0 => "EMERGENCY",
-        1 => "ALERT",
-        2 => "CRITICAL",
-        3 => "ERROR",
-        4 => "WARNING",
-        5 => "NOTICE",
-        6 => "INFORMATIONAL",
-        7 => "DEBUG",
-    ];
-
     /**
      * SisHandler constructor.
      * @param int $level
@@ -63,7 +52,7 @@ class SisHandler extends AbstractProcessingHandler
 
         // define variables for making Telegram request
         $this->apiKey = config('sis-logger.apiKey');
-        $this->apiURL = config('sis-logger.apiURL');
+        $this->apiURL = config('sis-logger.apiUrl');
 
         // define variables for text message
         $this->appName = config('app.name');
@@ -81,22 +70,12 @@ class SisHandler extends AbstractProcessingHandler
 
         // trying to make request and send notification
         try {
-            // file_get_contents(
-            //     'https://api.telegram.org/bot' . $this->botToken . '/sendMessage?'
-            //     . http_build_query([
-            //         'text'       => $this->formatText($record['formatted'], $record['level_name']),
-            //         'chat_id'    => $this->chatId,
-            //         'parse_mode' => 'html',
-            //     ])
-            // );
-            $text                 = $this->formatText($record['formatted'], $record['level_name']);
-            $dataSIS              = new \stdClass();
-            $dataSIS->level       = array_search($record['level_name'], self::$levels);
-            $dataSIS->message     = $text;
-            $dataSIS->description = rtrim(strtok($text, "\n"));
-
+            $dataSIS          = new \stdClass();
+            $dataSIS->level   = $record['level'];
+            $dataSIS->message = $record['message'];
+            $dataSIS->context = $record;
+            
             $dataSIS = json_encode($dataSIS);
-            // Prepare headers
             $headers = [
                 "Content-Type"   => "application/json",
                 "Content-Length" => strlen($dataSIS),
@@ -108,29 +87,22 @@ class SisHandler extends AbstractProcessingHandler
             }
 
             $headers = array_values($headers);
+            $url = $this->apiURL . '?appKey=' . $this->apiKey;
+            $headers = ['Content-Type: application/json'];
 
-            // Send the request
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $this->apiURL);
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $dataSIS);
-            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_HEADER, true);
-            curl_exec($curl);
-            curl_close($curl);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataSIS);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $output = curl_exec($ch);
+
         } catch (Exception $exception) {
 
         }
     }
 
-    /**
-     * @param string $text
-     * @param string $level
-     * @return string
-     */
-    private function formatText(string $text, string $level): string
-    {
-        return '<b>' . $this->appName . '</b> (' . $level . ')' . PHP_EOL . 'Env: ' . $this->appEnv . PHP_EOL . $text;
-    }
+
 }
