@@ -76,17 +76,6 @@ class SisHandler extends AbstractProcessingHandler
             $dataSIS->context = $record;
             
             $dataSIS = json_encode($dataSIS);
-            $headers = [
-                "Content-Type"   => "application/json",
-                "Content-Length" => strlen($dataSIS),
-                "Authorization"  => $this->apiKey,
-            ];
-
-            foreach ($headers as $header => &$content) {
-                $content = "{$header}: {$content}";
-            }
-
-            $headers = array_values($headers);
             $url = $this->apiURL . '?appKey=' . $this->apiKey;
             $headers = ['Content-Type: application/json'];
 
